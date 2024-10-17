@@ -16,6 +16,9 @@ in
       username = "datosh";
       homeDirectory = "/home/datosh";
       stateVersion = "24.05";
+      sessionPath = [
+        "$HOME/go/bin"
+      ];
     };
 
     nixpkgs.config.allowUnfree = true;
@@ -38,6 +41,16 @@ in
       wallpaper=,${./wallpaper.jpg}
       ipc=off
     '';
+
+    programs.ssh = {
+      enable = true;
+      matchBlocks = {
+        "nonoisenode" = {
+          hostname = "192.168.1.109";
+          user = "datosh";
+        };
+      };
+    };
 
     programs.git = {
       enable = true;
@@ -125,146 +138,86 @@ in
       # style...
     };
 
-    programs.waybar.enable = true;
-    programs.waybar.settings = {
-      minBar = {
-        layer = "top";
-        position = "top";
-        height = 24;
-        modules-left = ["cpu" "memory" "hyprland/workspaces"];
-        modules-center = ["clock"];
-        modules-right = ["network" "pulseaudio" "battery"];
+    programs.waybar = {
+      enable = true;
+      style = ./waybar-style.css;
 
-        "clock" = {
-          format = "{:%H:%M}";
-          format-alt = "{:%b %d %Y}";
-          tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
-        };
+      settings = {
+        minBar = {
+          layer = "top";
+          position = "top";
+          height = 24;
+          modules-left = ["cpu" "memory" "hyprland/workspaces"];
+          modules-center = ["clock"];
+          modules-right = ["network" "pulseaudio" "battery"];
 
-        "pulseaudio" = {
-          format = "{volume}% {icon}";
-          format-muted = "󰖁";
-          format-icons = {
-            default = ["󰕿" "󰖀" "󰕾"];
+          "clock" = {
+            format = "{:%H:%M}";
+            format-alt = "{:%b %d %Y}";
+            tooltip-format = "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>";
           };
-          scroll-step = 5.0;
-          smooth-scrolling-threshold = 7.0;
-          on-click-right = "pamixer -t";
-          on-click = "pavucontrol";
-        };
 
-        "battery" = {
-          interval = 60;
-          states = {
-            warning = 25;
-            critical = 15;
+          "pulseaudio" = {
+            format = "{volume}% {icon}";
+            format-muted = "󰖁";
+            format-icons = {
+              default = ["󰕿" "󰖀" "󰕾"];
+            };
+            scroll-step = 5.0;
+            smooth-scrolling-threshold = 7.0;
+            on-click-right = "pamixer -t";
+            on-click = "pavucontrol";
           };
-          format = "{capacity}% {icon}";
-          format-warning = "{icon}";
-          format-critical = "{icon}";
-          format-charging = "{capacity}% 󱐋";
-          format-plugged = "{capacity}% 󰚥";
-          format-notcharging = "{capacity}% 󰚥";
-          format-full = "{capacity}% 󰂄";
 
-          format-alt = "{capacity}%";
-          format-icons = ["󱊡" "󱊢" "󱊣"];
-        };
+          "battery" = {
+            interval = 60;
+            states = {
+              warning = 25;
+              critical = 15;
+            };
+            format = "{capacity}% {icon}";
+            format-warning = "{icon}";
+            format-critical = "{icon}";
+            format-charging = "{capacity}% 󱐋";
+            format-plugged = "{capacity}% 󰚥";
+            format-notcharging = "{capacity}% 󰚥";
+            format-full = "{capacity}% 󰂄";
 
-        "cpu" = {
-          format = "{}% ";
-          interval = 3;
-        };
-
-        "memory" = {
-          format = "{}% ";
-          interval = 3;
-        };
-
-        "hyprland/workspaces" = {
-          format = "{name}";
-          all-outputs = true;
-          on-click = "activate";
-          format-icons = {
-            active = " 󱎴";
-            default = "󰍹";
+            format-alt = "{capacity}%";
+            format-icons = ["󱊡" "󱊢" "󱊣"];
           };
-        };
 
-        "network" = {
-          format-wifi = "{bandwidthUpBytes}↑ {bandwidthDownBytes}↓ {icon} ({signalStrength})";
-          format-ethernet = "{bandwidthUpBytes}↑ {bandwidthDownBytes}↓ 󰈀";
-          format-disconnected = "󰤭";
-          tooltip-format = "{essid}";
-          interval = 3;
-          # on-click = "~/.config/waybar/scripts/network/rofi-network-manager.sh";
-          format-icons = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+          "cpu" = {
+            format = "{}% ";
+            interval = 3;
+          };
+
+          "memory" = {
+            format = "{}% ";
+            interval = 3;
+          };
+
+          "hyprland/workspaces" = {
+            format = "{name}";
+            all-outputs = true;
+            on-click = "activate";
+            format-icons = {
+              active = " 󱎴";
+              default = "󰍹";
+            };
+          };
+
+          "network" = {
+            format-wifi = "{bandwidthUpBytes} ↑ {bandwidthDownBytes} ↓ {icon} ({signalStrength})";
+            format-ethernet = "{bandwidthUpBytes} ↑ {bandwidthDownBytes} ↓ 󰈀";
+            format-disconnected = "󰤭";
+            tooltip-format = "{essid}";
+            interval = 3;
+            # on-click = "~/.config/waybar/scripts/network/rofi-network-manager.sh";
+            format-icons = ["󰤯" "󰤟" "󰤢" "󰤥" "󰤨"];
+          };
         };
       };
     };
-    programs.waybar.style = ''
-      * {
-        font-family: Material Design Icons, FiraCode Nerd Font;
-        font-size: 14px;
-      }
-
-      window#waybar {
-        background-color: #3B4252;
-      }
-
-      #clock,
-      #cpu,
-      #memory,
-      #network,
-      #battery,
-      #pulseaudio,
-      #workspaces {
-        color: #D8DEE9;
-        background-color: #2E3440;
-        border-radius: 8px;
-
-        /* top-bottom left-right */
-        margin: 8px 6px;
-        padding: 0 12px;
-      }
-
-      #cpu {
-        padding-right: 15px;
-        margin-left: 10px;
-      }
-
-      #memory {
-        padding-right: 15px;
-      }
-
-      #workspaces button {
-        color: #4C566A;
-
-        padding-right: 3px;
-        padding-left: 4px;
-
-        margin-left: 0.1em;
-        margin-right: 0em;
-        transition: all 0.3s cubic-bezier(0.55, -0.68, 0.48, 1.68);
-      }
-
-      #workspaces button.active {
-        color: #D8DEE9;
-        padding-left: 1px;
-        padding-right: 5px;
-
-        font-family: Iosevka Nerd Font;
-        font-weight: bold;
-        font-size: 12px;
-
-        margin-left: 0em;
-        margin-right: 0em;
-        transition: all 0.3s cubic-bezier(0.55, -0.68, 0.48, 1.68);
-      }
-
-      #network.disconnected {
-        color: #BF616A;
-      }
-    '';
   };
 }

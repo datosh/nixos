@@ -41,6 +41,8 @@
     (nerdfonts.override { fonts = [ "FiraCode" ]; })
   ];
 
+  virtualisation.docker.enable = true;
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.datosh = {
     isNormalUser = true;
@@ -50,15 +52,35 @@
       "networkmanager"
       "wheel"
       "audio" "sound" "video"
+      "docker"
     ];
     packages = with pkgs; [
       neofetch
+      obsidian
+      gcc
+      libgcc
+      gnumake
+      cmake
       go
       vim
+      nodejs_20
+      tenv
+      opentofu
+      google-cloud-sdk
+      # Yarn
+      corepack
 
       # browser
       firefox
       google-chrome
+
+      # recording
+      obs-studio
+
+      # random
+      libsecret
+      hugo
+      signal-desktop
 
       # hyprland
       brightnessctl   # screen brightness control
