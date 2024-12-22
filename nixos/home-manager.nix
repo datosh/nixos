@@ -83,7 +83,7 @@ in
     programs.kitty = {
       enable = true;
       shellIntegration.enableZshIntegration = true;
-      theme = "Nord";
+      themeFile = "Nord";
       settings = {
         # TODO: Copy the rest of my kitty config to nix syntax
         enable_audio_bell = false;

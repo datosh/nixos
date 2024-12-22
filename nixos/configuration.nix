@@ -37,8 +37,12 @@
   };
   console.keyMap = "de-latin1-nodeadkeys";
 
+  # fonts.packages = with pkgs; [
+  #   (nerdfonts.override { fonts = [ "FiraCode" ]; })
+  # ];
+
   fonts.packages = with pkgs; [
-    (nerdfonts.override { fonts = [ "FiraCode" ]; })
+    pkgs.nerd-fonts.fira-code
   ];
 
   virtualisation.docker.enable = true;
