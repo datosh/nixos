@@ -17,4 +17,4 @@ sudo cp hyprland/hyprland.conf $HOME/.config/hypr/hyprland.conf
 
 # Apply changes
 
-sudo nixos-rebuild switch --upgrade
+sudo nixos-rebuild switch
